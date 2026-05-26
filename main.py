@@ -335,32 +335,9 @@ def total_hours():
     # print("final: ", instance)
 
 
-staff = """Stella
-Marina
-Gavin
-Fritz
-Berit
-Julia
-Bryn
-Will
-Maggie
-Krish
-Luke
-Maddie
-Lars
-Leah
-Pierce
-Simone
-Siadhal
-Kate
-River
-Trey
-Arianna"""
-
-for member in staff.strip().split("\n"):
-    emp = member.strip().lower()
+for emp in employee_availability:
     shifts = when_are_they_working(emp)
-    print(f"{member} is working {len(shifts)} shifts: {shifts}")
+    print(f"{emp.title()} is working {len(shifts)} shifts: {shifts}")
 
 for time_slot in openhours:
     for start, end, _ in openhours[time_slot]:
