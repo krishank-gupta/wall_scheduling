@@ -42,18 +42,27 @@ openhours = {
 
 # Discourage algorithm to return results with the following pairs working together
 # Names must match the csv file, edit responses if necessary
+# CONFLICTS = {
+#     ("PersonX", "PersonY"): 5,  # higher value = more discouraged
+#     ("PersonA", "PersonY"): 5
+# }
+
+# Add conflicts in the format above
 CONFLICTS = {
-    ("PersonX", "PersonY"): 5,  # higher value = more discouraged
-    ("PersonA", "PersonY"): 5
+
 }
 
 # Encourage algorithm to return resuts with the following pairs working together
 
 # For gender queer and beginner hours, put people comfortable working together below 
 # So that they are likely to be scheduled together and those hours can be 
+# PREFERRED_PAIRS = {
+#     ("PersonA", "PersonB"): 5,
+#     ("PersonC", "PersonD"): 5
+# }
+
+# Add preferred pairs in the format above
 PREFERRED_PAIRS = {
-    ("PersonA", "PersonB"): 5,
-    ("PersonC", "PersonD"): 5
 }
 
 # Convert form response from csv file to actual week day
