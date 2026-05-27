@@ -4,6 +4,20 @@
 
 This program takes staff availability from a Google Form and automatically generates an optimized weekly schedule using a linear programming algorithm.
 
+## Features
+
+The program takes staff availability as input in the form of a CSV file. The program has opening hours and the number of staff per shift configured in the code (this can be changed in the top section of the main.py file). The program can also configure staff who should and shouldn't be placed together in the same shift. This is useful for staff who can work together during beginner hours/gender queer hours/lead hours, or if there are staff who don't work well together. The program tries to give everybody 2 shifts which are non-consecutive based on their availability. 
+
+The program defaults to a PM timing because all open shifts are in the evening time. If at some point there is going to be an AM opening shift, then the csv file result should include 'AM' for every AM time. For example: `10:00 AM - 12:00, 4:00 - 6:00` and then the config file can be updated to include the new shift as follows
+`
+    "Sunday": [
+        (time(10), time(12), 2),
+        (time(14), time(16), 2),
+        (time(16), time(18), 2),
+        (time(18), time(20), 3),
+    ],
+`
+
 ---
 
 ## Step 1: Create the Google Form
@@ -18,13 +32,14 @@ Responses will be collected in a linked Google Sheet like [this one](https://doc
 
 ## Step 2: Download the Code
 
-Go to the [GitHub repository](https://github.com/krishank-gupta/wall_scheduling/tree/main) and download the code using the green **Code** button → **Download ZIP**. Then unzip the folder somewhere on your computer.
+Go to the [GitHub repository](https://github.com/krishank-gupta/wall_scheduling/tree/main) and download the code using the green **Code** button → **Download ZIP**. Then unzip the folder somewhere on your computer. Delete the responses.csv file because the next step will create a new one with the fresh data.
 
 ---
 
 ## Step 3: Export Responses as CSV
 
-In your Google Sheet, go to **File → Download → Comma-separated values (.csv)** and save the file into the unzipped folder. Make sure the file is named `responses.csv`.
+In your Google Sheet, go to **File → Download → Comma-separated values (.csv)** and save the downloaded file into the unzipped folder. 
+Make sure the file is named `responses.csv`.
 
 ---
 
@@ -44,7 +59,7 @@ Type `cd ` (with a space after it), then drag the unzipped folder into the termi
 
 ## Step 6: Install Dependencies
 
-Run the following command and press **Enter**:
+Type the following command on the terminal window and press **Enter**:
 
 ```
 pip install -r requirements.txt
@@ -56,7 +71,7 @@ This will install the required `pulp` library. It may take a few seconds.
 
 ## Step 7: Configure Conflicts and Preferred Pairs
 
-Open `main.py` in a text editor (such as TextEdit on Mac, Notepad on Windows, or VS Code).
+Open `config.py` in a text editor (such as TextEdit on Mac, Notepad on Windows, or VS Code).
 
 Find the `CONFLICTS` and `PREFERRED_PAIRS` sections near the top of the file and edit them to reflect any staffing preferences:
 
@@ -65,6 +80,7 @@ Find the `CONFLICTS` and `PREFERRED_PAIRS` sections near the top of the file and
 
 Names must match exactly how they appear in the `responses.csv` file (the program handles capitalization automatically).
 
+You can also edit the opening hours in this section and how many staff are needed in any opening shift.
 ---
 
 ## Step 8: Run the Program
