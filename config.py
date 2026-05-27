@@ -8,6 +8,7 @@ from datetime import time
 
 OPENHOURS = {
     "Sunday": [
+        (time(10), time(12), 3),
         (time(14), time(16), 2),
         (time(16), time(18), 2),
         (time(18), time(20), 3),

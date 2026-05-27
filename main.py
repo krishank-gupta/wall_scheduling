@@ -214,6 +214,67 @@ def build_lookup(variable: dict) -> tuple[dict, dict]:
 
     return dict(shifts_by_employee), dict(employees_by_shift)
 
+# ==============================================================================
+# Infeasible Results Diagnostic
+# Re-runs the model by changing constraints to identify why a solution can't be found.
+# ==============================================================================
+
+def diagnose_infeasible(employee_availability: dict):
+    lp = LpProblem("wall_scheduling_diagnostic", LpMinimize)
+
+    variable = {}
+    for day, shifts in OPENHOURS.items():
+        for start, end, _ in shifts:
+            for employee, avail in employee_availability.items():
+                if day in avail:
+                    for a_start, a_end in avail[day]:
+                        if a_start <= start and a_end >= end:
+                            variable[(employee, day, start, end)] = LpVariable(
+                                f"{employee}_{day}_{start.strftime('%H%M')}_{end.strftime('%H%M')}",
+                                cat="Binary"
+                            )
+
+    # Shortfall variable for each shift — how many staff short are we?
+    shortfall = {}
+    for day, shifts in OPENHOURS.items():
+        for start, end, required in shifts:
+            s = LpVariable(
+                f"shortfall_{day}_{start.strftime('%H%M')}_{end.strftime('%H%M')}",
+                lowBound=0, cat="Integer"
+            )
+            shortfall[(day, start, end)] = s
+
+            lp += (
+                lpSum(
+                    variable[(e, day, start, end)]
+                    for e in employee_availability
+                    if (e, day, start, end) in variable
+                ) + s == required,
+                f"coverage_{day}_{start.strftime('%H%M')}_{end.strftime('%H%M')}"
+            )
+
+    # Minimize total shortfall
+    lp += lpSum(shortfall.values())
+    lp.solve(PULP_CBC_CMD(msg=False))
+
+    print("\n--- Infeasibility Diagnostic ---")
+    total = 0
+    for (day, start, end), s in shortfall.items():
+        gap = int(round(s.varValue))
+        if gap > 0:
+            total += gap
+            available = [
+                e for e in employee_availability
+                if (e, day, start, end) in variable
+            ]
+            print(
+                f"  {day} {start.strftime('%H:%M')}–{end.strftime('%H:%M')}: "
+                f"short by {gap} staff "
+                f"(only {len(available)} available: {[e.title() for e in available]})"
+            )
+    if total == 0:
+        print("  Coverage gaps are not the issue — check min/max shift constraints.")
+    print(f"  Total staff shortfall: {total}\n")
 
 # ==============================================================================
 # ENTRY POINT
@@ -229,10 +290,10 @@ if __name__ == "__main__":
 
     if status == "Infeasible":
         print(
-            "No valid schedule could be found. There may not be enough staff "
-            "availability to cover all required shifts. Check responses.csv and "
-            "the shift requirements in config.py."
+            "No valid schedule could be found. Please check the diagnostic below to identify coverage gaps or conflicting constraints in the availability data."
         )
+
+        diagnose_infeasible(employee_availability)
     else:
         shifts_by_employee, employees_by_shift = build_lookup(variable)
 

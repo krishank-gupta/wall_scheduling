@@ -81,6 +81,7 @@ Find the `CONFLICTS` and `PREFERRED_PAIRS` sections near the top of the file and
 Names must match exactly how they appear in the `responses.csv` file (the program handles capitalization automatically).
 
 You can also edit the opening hours in this section and how many staff are needed in any opening shift.
+
 ---
 
 ## Step 8: Run the Program
