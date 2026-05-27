@@ -18,6 +18,7 @@ The program defaults to a PM timing because all open shifts are in the evening t
     ],
 `
 If there is no possible schedule based on availability, the program runs a diagnostic to identify which shifts can't have enough staff so that the manager can find additional staffing for those shifts or reduce number of staff required for those shifts.
+
 ---
 
 ## Step 1: Create the Google Form
