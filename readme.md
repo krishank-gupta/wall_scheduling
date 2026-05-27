@@ -79,7 +79,8 @@ Find the `CONFLICTS` and `PREFERRED_PAIRS` sections near the top of the file and
 - **CONFLICTS** — pairs of staff who should *not* be scheduled together
 - **PREFERRED_PAIRS** — pairs of staff who *should* be scheduled together when possible (e.g. for beginner or gender-queer hours)
 
-*These restrictions will only be respected if there is a potential solution while respecting them. 
+
+> **Important:** The **conflcits** and **preferred pairs** are suggestions that will only be followed if there is a solution that can accomodate them. If there are no solutions that can respect these, the program will prioritize a solution without adhering to the above suggestions.
 
 Names must match exactly how they appear in the `responses.csv` file (the program handles capitalization automatically).
 
